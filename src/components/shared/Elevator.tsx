@@ -34,7 +34,6 @@ const StyledElevatorCage = styled.div<StyledElevatorCageProps>`
 interface ElevatorProps extends StyledElevatorProps, StyledElevatorCageProps { }
 
 export const Elevator: React.FC<ElevatorProps> = (props) => {
-  console.log(props.position);
   return (
     <StyledElevator position={props.position}>
       <StyledElevatorCage number={props.number} />

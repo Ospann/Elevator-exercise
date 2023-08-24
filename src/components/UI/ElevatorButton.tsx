@@ -6,14 +6,14 @@ interface ElevatorButtonProps {
 
 const StyledElevatorButton = styled.button<ElevatorButtonProps>`
   &[aria-pressed="true"] {
-    border: 5px solid yellow;
+    border: 5px solid #0000FF;
   }
   border-radius: 50%;
   border: 5px solid black;
-  height: 100px;
-  width: 100px;
+  height: 70px;
+  width: 70px;
   font-weight: bold;
-  font-size: 40px;
+  font-size: 30px;
   align-items: center;
   justify-content: center;
   cursor: pointer;

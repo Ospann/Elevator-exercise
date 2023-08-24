@@ -4,7 +4,7 @@ import BuildingFloor from "../UI/BuildingFloor";
 import findNearestFloorIndex from "../../helpers/findNearestFloorIndex";
 
 const FLOOR_HEIGHT = 60;
-
+const ELEVATOR_WIDTH = 42.5;
 interface IBuilding {
     currentFloors: number[];
     currentFloor: number,
@@ -12,37 +12,35 @@ interface IBuilding {
     elevators: number
 }
 
-interface IStyledBuild {
-    currentFloor: number,
-    floors: number,
-    nearest: number
-}
-
-const StyledBuilding = styled.div<IStyledBuild>`
-height: ${(props) => props.floors * FLOOR_HEIGHT}px;
-width: 200px;
-background: gray;
-position: relative;
+const StyledBuilding = styled.div<{ elevator: number }>`
+    min-width: 200px;
+    width: ${(props) => props.elevator * ELEVATOR_WIDTH}px;
+    background: gray;
+    position: relative;
 `;
 
 
+/**
+ * Component which render Building
+ * @param param0 
+ * @returns 
+ */
 const Building = ({ currentFloors, currentFloor, floors, elevators }: IBuilding) => {
-    const buildingFloors = [];
-    const buildingElevators = [];
     const nearestFloorIndex = findNearestFloorIndex(currentFloor, currentFloors);
     currentFloors[nearestFloorIndex] = currentFloor;
 
-    for (let i = 0; i < floors + 1; i += 1) {
-        buildingFloors.push(<BuildingFloor key={i} height={FLOOR_HEIGHT} />);
-    }
+    const buildingFloors = Array.from({ length: floors }, (_, index) => (
+        <BuildingFloor key={index} height={FLOOR_HEIGHT} />
+    ));
 
-    for (let i = 0; i < elevators; i += 1) {
-        const position = currentFloors[i] * FLOOR_HEIGHT
-        buildingElevators.push(<Elevator key={i} number={i} position={position} />);
-    }
+    const buildingElevators = Array.from({ length: elevators }, (_, index) => {
+        const position = currentFloors[index] * FLOOR_HEIGHT;
+        return <Elevator key={index} number={index} position={position} />;
+    });
+
 
     return (
-        <StyledBuilding nearest={nearestFloorIndex} currentFloor={currentFloor} floors={floors} >
+        <StyledBuilding elevator={elevators} >
             {buildingFloors}
             {buildingElevators}
         </StyledBuilding>

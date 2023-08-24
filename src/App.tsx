@@ -4,6 +4,7 @@ import Building from "./components/shared/Building";
 import { Layout } from "./components/UI/Layout";
 import { useForm } from "react-hook-form";
 import InputForm from "./components/shared/InputForm";
+import { Earth } from "./components/UI/Earth";
 
 const App: React.FC = () => {
   const {
@@ -18,6 +19,9 @@ const App: React.FC = () => {
   const [elevatorRequests, setElevatorRequests] = useState<boolean[]>([]);
   const interval = useRef<number | undefined>();
 
+  const floors = getValues("floors") || 8;
+  const evelators = getValues("lifts") || 1;
+
   const onFloorRequest = useCallback(
     (floor: number) => {
       if (!elevatorRequests[floor] && floor !== currentFloor) {
@@ -25,8 +29,7 @@ const App: React.FC = () => {
         newRequests[floor] = true;
         setElevatorRequests(newRequests);
       }
-    },
-    [elevatorRequests, currentFloor]
+    }, [elevatorRequests, currentFloor]
   );
 
   const moveToFloor = useCallback(
@@ -35,50 +38,60 @@ const App: React.FC = () => {
       const newRequests = [...elevatorRequests];
       newRequests[floor] = false;
       setElevatorRequests(newRequests);
-    },
-    [elevatorRequests]
+    }, [elevatorRequests]
   );
 
   useEffect(() => {
     clearTimeout(interval.current);
-    interval.current = setInterval(() => {
-      for (let i = currentFloor; i < getValues("floors"); i += 1) {
-        if (elevatorRequests[i]) {
-          moveToFloor(i);
-          return;
-        }
+    interval.current = setInterval(moveElevator, 500);
+
+    return () => {
+      clearTimeout(interval.current);
+    };
+  }, [currentFloor, elevatorRequests, moveToFloor, floors]);
+
+
+  const moveElevator = () => {
+    for (let i = currentFloor; i < floors; i += 1) {
+      if (elevatorRequests[i]) {
+        moveToFloor(i);
+        return;
       }
-      for (let i = currentFloor; i >= 0; i -= 1) {
-        if (elevatorRequests[i]) {
-          moveToFloor(i);
-          return;
-        }
+    }
+    for (let i = currentFloor; i >= 0; i -= 1) {
+      if (elevatorRequests[i]) {
+        moveToFloor(i);
+        return;
       }
-    }, 500);
-  }, [currentFloor, elevatorRequests, moveToFloor, getValues]);
+    }
+  };
 
   const handleFormSubmit = (data: { lifts: number, floors: number }) => {
-    setValue("lifts", data.lifts || 1);
-    setValue("floors", data.floors || 8);
-    const currentFloors = Array.from({ length: data.lifts || 1 }, () => 0);
+    setValue("lifts", data.lifts);
+    setValue("floors", data.floors);
+    const currentFloors = Array.from({ length: data.lifts }, () => 0);
     setValue("currentFloors", currentFloors);
+    setCurrentFloor(0);
   };
 
   return (
-    <Layout className="App">
-      <InputForm register={register} onSubmit={handleSubmit(handleFormSubmit)} />
-      <ElevatorButtons
-        floors={Number(getValues("floors"))}
-        onFloorRequest={onFloorRequest}
-        pressed={elevatorRequests}
-      />
-      <Building
-        floors={Number(getValues("floors")) || 8}
-        elevators={Number(getValues("lifts")) || 1}
-        currentFloors={getValues("currentFloors") || []}
-        currentFloor={currentFloor}
-      />
-    </Layout>
+    <>
+      <Layout className="App">
+        <InputForm register={register} onSubmit={handleSubmit(handleFormSubmit)} />
+        <ElevatorButtons
+          floors={floors}
+          onFloorRequest={onFloorRequest}
+          pressed={elevatorRequests}
+        />
+        <Building
+          floors={floors}
+          elevators={evelators}
+          currentFloors={getValues("currentFloors") || []}
+          currentFloor={currentFloor}
+        />
+      </Layout>
+      <Earth />
+    </>
   );
 };
 

@@ -1,8 +1,8 @@
 /**
- * 
+ * Function to Find Near Elevator from array
  * @param value 
  * @param array 
- * @returns 
+ * @returns index
  */
 const findNearestFloorIndex = (value: number, array: number[]) => {
   let nearestIndex = 0;
