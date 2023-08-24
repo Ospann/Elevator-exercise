@@ -17,7 +17,7 @@ const App: React.FC = () => {
 
   const [currentFloor, setCurrentFloor] = useState<number>(0);
   const [elevatorRequests, setElevatorRequests] = useState<boolean[]>([]);
-  const interval = useRef<number | undefined>();
+  const interval = useRef<NodeJS.Timeout | null>(null);
 
   const floors = getValues("floors") || 8;
   const evelators = getValues("lifts") || 1;
@@ -42,11 +42,12 @@ const App: React.FC = () => {
   );
 
   useEffect(() => {
-    clearTimeout(interval.current);
+    if (interval.current) clearInterval(interval.current);
+
     interval.current = setInterval(moveElevator, 500);
 
     return () => {
-      clearTimeout(interval.current);
+      if (interval.current) clearInterval(interval.current);
     };
   }, [currentFloor, elevatorRequests, moveToFloor, floors]);
 
