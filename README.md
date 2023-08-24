@@ -1,8 +1,8 @@
-** ELEVATOR EXERCISE
+# ELEVATOR EXERCISE
 
 
 
-PART 1 – Setup base solution according to Standards
+## PART 1 – Setup base solution according to Standards
 You are required to create a base solution according to the standards below:
 
 
@@ -25,7 +25,7 @@ e. Jest testing package
 
 
 
-PART 2 – The Application
+## PART 2 – The Application
 
 
 
