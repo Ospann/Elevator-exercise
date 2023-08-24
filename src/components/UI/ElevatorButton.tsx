@@ -2,6 +2,8 @@ import styled from "styled-components";
 
 interface ElevatorButtonProps {
   pressed?: boolean;
+  children?: React.ReactNode;
+  onClick?: () => void; 
 }
 
 const StyledElevatorButton = styled.button<ElevatorButtonProps>`

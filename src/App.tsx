@@ -6,14 +6,21 @@ import { useForm } from "react-hook-form";
 import InputForm from "./components/shared/InputForm";
 import { Earth } from "./components/UI/Earth";
 
+interface FormData {
+  lifts: number;
+  floors: number;
+  currentFloors?: number[];
+}
+
 const App: React.FC = () => {
   const {
     register,
     handleSubmit,
     setValue,
     getValues,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     formState: { errors },
-  } = useForm();
+  } = useForm<FormData>();
 
   const [currentFloor, setCurrentFloor] = useState<number>(0);
   const [elevatorRequests, setElevatorRequests] = useState<boolean[]>([]);
@@ -67,7 +74,7 @@ const App: React.FC = () => {
     }
   };
 
-  const handleFormSubmit = (data: { lifts: number, floors: number }) => {
+  const handleFormSubmit = (data: FormData) => {
     setValue("lifts", data.lifts);
     setValue("floors", data.floors);
     const currentFloors = Array.from({ length: data.lifts }, () => 0);

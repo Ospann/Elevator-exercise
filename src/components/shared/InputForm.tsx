@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import styled from "styled-components";
-import { useForm, SubmitHandler, UseFormReturn } from "react-hook-form";
+import { useForm, UseFormReturn } from "react-hook-form";
 
 interface FormData {
     lifts: number;
@@ -8,7 +9,7 @@ interface FormData {
 }
 
 interface InputFormProps {
-    onSubmit: SubmitHandler<FormData>;
+    onSubmit: any;
     register: UseFormReturn<FormData>["register"];
 }
 
@@ -62,15 +63,13 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, register }) => {
                 <Label htmlFor="lifts">Lifts:</Label>
                 <Input
                     id="lifts"
-                    name="lifts"
-                    type="number" 
+                    type="number"
                     placeholder="1"
                     required
                     pattern="[0-9]*"
-                    {...register("lifts", { 
-                        defaultValue: 1,
+                    {...register("lifts", {
                         pattern: {
-                            value: /^[0-9]*$/, 
+                            value: /^[0-9]*$/,
                             message: "Only numbers are allowed"
                         }
                     })}
@@ -81,20 +80,18 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, register }) => {
                 <Label htmlFor="floors">Floors:</Label>
                 <Input
                     id="floors"
-                    name="floors"
                     type="number"
                     placeholder="8"
                     required
                     pattern="[0-9]*"
                     {...register("floors", {
-                        defaultValue: 8,
                         pattern: {
                             value: /^[0-9]*$/,
                             message: "Only numbers are allowed"
                         }
                     })}
                 />
-                 {errors.floors && <p>{errors.floors.message}</p>}
+                {errors.floors && <p>{errors.floors.message}</p>}
             </FormGroup>
             <SubmitButton onClick={handleSubmit(handleFormSubmit)}>Submit</SubmitButton>
         </FormContainer>
