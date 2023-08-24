@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import ElevatorButtons from "./components/shared/Buttons";
 import Building from "./components/shared/Building";
@@ -18,6 +19,7 @@ const App: React.FC = () => {
     handleSubmit,
     setValue,
     getValues,
+    // @ts-ignore
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     formState: { errors },
   } = useForm<FormData>();
