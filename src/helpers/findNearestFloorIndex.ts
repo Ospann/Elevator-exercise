@@ -6,11 +6,11 @@ const findNearestFloorIndex = (
   let nearestIndex = -1;
   let nearestDifference = Infinity;
 
-  for (let i = 0; i < array.length; i++) {
+  for (let i = array.length - 1; i >= 0; i--) {
     if (array[i] === value) return i;
   }
 
-  for (let i = 0; i < array.length; i++) {
+  for (let i = array.length - 1; i >= 0; i--) {
     if (!busies[i]) {
       const difference = Math.abs(array[i] - value);
 
@@ -21,7 +21,7 @@ const findNearestFloorIndex = (
     }
   }
 
-  for (let i = nearestIndex + 1; i < array.length; i++) {
+  for (let i = nearestIndex - 1; i >= 0; i--) {
     if (!busies[i]) {
       const difference = Math.abs(array[i] - value);
       if (difference < nearestDifference) {
