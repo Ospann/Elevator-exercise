@@ -11,6 +11,7 @@ interface FormData {
   lifts: number;
   floors: number;
   currentFloors?: number[];
+  busies?: boolean[];
 }
 
 const App: React.FC = () => {
@@ -65,7 +66,9 @@ const App: React.FC = () => {
     setValue("lifts", data.lifts);
     setValue("floors", data.floors);
     const currentFloors = Array.from({ length: data.lifts }, () => 0);
+    const busies = Array.from({ length: data.lifts }, () => false);
     setValue("currentFloors", currentFloors);
+    setValue("busies", busies);
     setCurrentFloor(0);
   };
 
@@ -81,6 +84,7 @@ const App: React.FC = () => {
         <Building
           floors={floors}
           elevators={evelators}
+          busies={getValues("busies") || []}
           currentFloors={getValues("currentFloors") || []}
           currentFloor={currentFloor}
         />

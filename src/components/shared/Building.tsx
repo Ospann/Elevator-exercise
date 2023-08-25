@@ -2,15 +2,16 @@ import styled from "styled-components";
 import Elevator from "./Elevator";
 import BuildingFloor from "../UI/BuildingFloor";
 import findNearestFloorIndex from "../../helpers/findNearestFloorIndex";
-
+import { memo, useMemo } from 'react';
 const FLOOR_HEIGHT = 60;
 const ELEVATOR_WIDTH = 42.5;
 
 interface IBuilding {
     currentFloors: number[];
-    currentFloor: number,
-    floors: number,
-    elevators: number
+    currentFloor: number;
+    floors: number;
+    elevators: number;
+    busies: boolean[];
 }
 
 const StyledBuilding = styled.div<{ elevator: number }>`
@@ -25,8 +26,14 @@ const StyledBuilding = styled.div<{ elevator: number }>`
  * @param param0 
  * @returns 
  */
-const Building = ({ currentFloors, currentFloor, floors, elevators }: IBuilding) => {
-    const nearestFloorIndex = findNearestFloorIndex(currentFloor, currentFloors);
+const Building = memo(({ currentFloors, currentFloor, floors, elevators, busies }: IBuilding) => {
+    console.log(currentFloor, currentFloors, busies)
+    const nearestFloorIndex = useMemo(() => {
+        const index = findNearestFloorIndex(currentFloor, currentFloors, busies)
+        busies[index] = true;
+        return index;
+    }, [currentFloor, currentFloors, busies]);
+    setTimeout(() => busies[nearestFloorIndex] = false, 1000);
     currentFloors[nearestFloorIndex] = currentFloor;
 
     const buildingFloors = Array.from({ length: floors }, (_, index) => (
@@ -45,6 +52,6 @@ const Building = ({ currentFloors, currentFloor, floors, elevators }: IBuilding)
             {buildingElevators}
         </StyledBuilding>
     );
-};
+});
 
 export default Building;
