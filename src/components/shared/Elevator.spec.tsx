@@ -8,7 +8,7 @@ test("renders Elevator with correct position", () => {
     const distance = 2;
     const aim = 3;
     const { getByTestId } = render(
-        <Elevator position={position} number={number} distance={distance} aim={aim} />
+        <Elevator updated={true} position={position} number={number} distance={distance} aim={aim} />
     );
 
     const elevator = getByTestId("elevator");
@@ -23,7 +23,7 @@ test("renders Elevator with correct cage number", () => {
     const aim = 0;
 
     const { getByTestId } = render(
-        <Elevator position={position} number={number} distance={distance} aim={aim} />
+        <Elevator updated={false} position={position} number={number} distance={distance} aim={aim} />
     );
 
     const elevatorCage = getByTestId("elevator-cage");

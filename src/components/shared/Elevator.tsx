@@ -34,12 +34,13 @@ interface ElevatorProps {
   number: number;
   distance: number;
   aim: number;
+  updated: boolean;
 }
 
-const Elevator: React.FC<ElevatorProps> = ({ position, number, distance, aim }) => {
+const Elevator: React.FC<ElevatorProps> = ({ position, number, distance, aim, updated }) => {
   const [currentFloor, setCurrentFloor] = useState(1);
   useEffect(() => {
-    if (currentFloor === aim) return;
+    if (!updated || (currentFloor === aim)) return;
 
     const interval = setInterval(() => {
       setCurrentFloor((prevFloor) => {
@@ -62,7 +63,7 @@ const Elevator: React.FC<ElevatorProps> = ({ position, number, distance, aim }) 
     return () => {
       clearInterval(interval);
     };
-  }, [aim]);
+  }, [aim, updated]);
 
   return (
     <StyledElevator position={position} floor={distance} data-testid="elevator">

@@ -28,7 +28,9 @@ const Building = ({ currentFloors, floors, currentFloor, elevators, distance }: 
 
     const buildingElevators = Array.from({ length: elevators }, (_, index) => {
         const position = currentFloors[index] * FLOOR_HEIGHT;
-        return <Elevator key={index} number={index} position={position} distance={distance} aim={currentFloor + 1} />;
+        const aim = currentFloor + 1;
+        const updated = currentFloors[index] === currentFloor;
+        return <Elevator key={index} updated={updated} number={index} position={position} distance={distance} aim={aim} />;
     });
 
     return (
