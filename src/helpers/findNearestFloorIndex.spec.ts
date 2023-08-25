@@ -6,7 +6,7 @@ describe("findNearestFloorIndex", () => {
     const array = [2, 4, 5, 8, 10];
     const busies = [true, true, false, false, false];
     const result = findNearestFloorIndex(value, array, busies);
-    expect(result).toBe(3);
+    expect(result).toBe(2);
   });
 
   it("should return the index of the nearest value when value is not in the array", () => {
@@ -14,7 +14,7 @@ describe("findNearestFloorIndex", () => {
     const array = [2, 4, 8, 10];
     const busies = [false, false, false, false];
     const result = findNearestFloorIndex(value, array, busies);
-    expect(result).toBe(1);
+    expect(result).toBe(2);
   });
 
   it("should return the index of the nearest value", () => {

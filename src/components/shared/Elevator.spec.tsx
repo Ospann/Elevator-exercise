@@ -5,9 +5,10 @@ import "@testing-library/jest-dom/extend-expect";
 test("renders Elevator with correct position", () => {
     const position = 100;
     const number = 1;
-
+    const distance = 2;
+    const aim = 3;
     const { getByTestId } = render(
-        <Elevator position={position} number={number} />
+        <Elevator position={position} number={number} distance={distance} aim={aim} />
     );
 
     const elevator = getByTestId("elevator");
@@ -18,9 +19,11 @@ test("renders Elevator with correct position", () => {
 test("renders Elevator with correct cage number", () => {
     const position = 0;
     const number = 0;
+    const distance = 0;
+    const aim = 0;
 
     const { getByTestId } = render(
-        <Elevator position={position} number={number} />
+        <Elevator position={position} number={number} distance={distance} aim={aim} />
     );
 
     const elevatorCage = getByTestId("elevator-cage");

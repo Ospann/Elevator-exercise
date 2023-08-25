@@ -1,8 +1,7 @@
 import styled from "styled-components";
 import Elevator from "./Elevator";
 import BuildingFloor from "../UI/BuildingFloor";
-import findNearestFloorIndex from "../../helpers/findNearestFloorIndex";
-import { memo, useMemo } from 'react';
+
 const FLOOR_HEIGHT = 60;
 const ELEVATOR_WIDTH = 42.5;
 
@@ -11,39 +10,26 @@ interface IBuilding {
     currentFloor: number;
     floors: number;
     elevators: number;
-    busies: boolean[];
+    distance: number;
 }
 
 const StyledBuilding = styled.div<{ elevator: number }>`
-    min-width: 200px;
+    min-width: 180px;
     width: ${(props) => props.elevator * ELEVATOR_WIDTH}px;
     background: gray;
     position: relative;
-`;
+};
+`
 
-/**
- * Component which render Building
- * @param param0 
- * @returns 
- */
-const Building = memo(({ currentFloors, currentFloor, floors, elevators, busies }: IBuilding) => {
-    const nearestFloorIndex = useMemo(() => {
-        const index = findNearestFloorIndex(currentFloor, currentFloors, busies)
-        busies[index] = true;
-        return index;
-    }, [currentFloor, currentFloors, busies]);
-    setTimeout(() => busies[nearestFloorIndex] = false, 2000);
-    currentFloors[nearestFloorIndex] = currentFloor;
-
+const Building = ({ currentFloors, floors, currentFloor, elevators, distance }: IBuilding) => {
     const buildingFloors = Array.from({ length: floors }, (_, index) => (
         <BuildingFloor key={index} height={FLOOR_HEIGHT} />
     ));
 
     const buildingElevators = Array.from({ length: elevators }, (_, index) => {
         const position = currentFloors[index] * FLOOR_HEIGHT;
-        return <Elevator key={index} number={index} position={position} />;
+        return <Elevator key={index} number={index} position={position} distance={distance} aim={currentFloor + 1} />;
     });
-
 
     return (
         <StyledBuilding data-testid="building" elevator={elevators} >
@@ -51,6 +37,6 @@ const Building = memo(({ currentFloors, currentFloor, floors, elevators, busies 
             {buildingElevators}
         </StyledBuilding>
     );
-});
+};
 
 export default Building;

@@ -3,14 +3,14 @@ import styled from "styled-components";
 import ElevatorButton from "../UI/ElevatorButton";
 
 const StyledElevatorButtons = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-  border: 5px solid black;
-  padding: 10px;
-  border-radius: 5px;
-  background-color: silver;
-  justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    border: 5px solid black;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: silver;
+    justify-content: center;
 `;
 
 interface ElevatorButtonsProps {

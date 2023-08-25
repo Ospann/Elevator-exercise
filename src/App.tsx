@@ -6,12 +6,14 @@ import { Layout } from "./components/UI/Layout";
 import { useForm } from "react-hook-form";
 import InputForm from "./components/shared/InputForm";
 import { Earth } from "./components/UI/Earth";
+import findNearestFloorIndex from "./helpers/findNearestFloorIndex";
+import handleSoundPlay from "./helpers/handleSoundPlay";
 
 interface FormData {
   lifts: number;
   floors: number;
-  currentFloors?: number[];
   busies?: boolean[];
+  oldFloors?: number[];
 }
 
 const App: React.FC = () => {
@@ -27,9 +29,11 @@ const App: React.FC = () => {
 
   const [currentFloor, setCurrentFloor] = useState<number>(0);
   const [elevatorRequests, setElevatorRequests] = useState<boolean[]>([]);
+  const [distance, setDistance] = useState(1);
 
   const floors = getValues("floors") || 8;
   const evelators = getValues("lifts") || 1;
+  const [elevatorsFloor, setElevatorsFloor] = useState([0]);
 
   const onFloorRequest = useCallback(
     (floor: number) => {
@@ -67,10 +71,32 @@ const App: React.FC = () => {
     setValue("floors", data.floors);
     const currentFloors = Array.from({ length: data.lifts }, () => 0);
     const busies = Array.from({ length: data.lifts }, () => false);
-    setValue("currentFloors", currentFloors);
+    setElevatorsFloor(currentFloors);
     setValue("busies", busies);
     setCurrentFloor(0);
   };
+
+  useEffect(() => {
+    const busies = getValues("busies") || [false];
+    const updatedBusies = [...busies];
+    const updatedCurrentFloors = [...elevatorsFloor];
+    const isAllTrue = busies.every((value) => value === true);
+    if (isAllTrue) return;
+
+    const index = findNearestFloorIndex(currentFloor, elevatorsFloor, busies);
+    const distance = Math.abs(elevatorsFloor[index] - currentFloor);
+    setDistance(distance);
+    updatedBusies[index] = true;
+    updatedCurrentFloors[index] = currentFloor;
+
+    setValue("busies", updatedBusies);
+    setElevatorsFloor(updatedCurrentFloors)
+    setTimeout(() => {
+      updatedBusies[index] = false;
+      setValue("busies", updatedBusies);
+      handleSoundPlay();
+    }, distance * 1000);
+  }, [currentFloor, getValues, setValue])
 
   return (
     <>
@@ -84,9 +110,9 @@ const App: React.FC = () => {
         <Building
           floors={floors}
           elevators={evelators}
-          busies={getValues("busies") || []}
-          currentFloors={getValues("currentFloors") || []}
+          currentFloors={elevatorsFloor}
           currentFloor={currentFloor}
+          distance={distance}
         />
       </Layout>
       <Earth />

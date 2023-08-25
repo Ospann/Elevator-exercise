@@ -12,10 +12,11 @@ const StyledElevatorButton = styled.button<ElevatorButtonProps>`
   }
   border-radius: 50%;
   border: 5px solid black;
-  height: 70px;
-  width: 70px;
+  min-height: 40px;
+  min-width: 40px;
+  aspect-ratio: 1 / 1; 
   font-weight: bold;
-  font-size: 30px;
+  font-size: 25px;
   align-items: center;
   justify-content: center;
   cursor: pointer;

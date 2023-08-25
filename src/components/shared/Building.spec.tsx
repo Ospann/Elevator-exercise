@@ -7,11 +7,11 @@ test("renders correct number of floors and elevators", () => {
     const currentFloor = 1;
     const floors = 5;
     const elevators = 3;
-    const busies = [true, false, false]
+    const distance = 1;
 
     render(
         <Building
-            busies={busies}
+            distance={distance}
             currentFloors={currentFloors}
             currentFloor={currentFloor}
             floors={floors}
