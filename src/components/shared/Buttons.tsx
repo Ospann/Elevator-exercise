@@ -6,7 +6,7 @@ const StyledElevatorButtons = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
-  border: 1px solid black;
+  border: 5px solid black;
   padding: 10px;
   border-radius: 5px;
   background-color: silver;
@@ -24,20 +24,8 @@ interface ElevatorButtonsProps {
  * @param param0 
  * @returns 
  */
-const ElevatorButtons: React.FC<ElevatorButtonsProps> = ({
-    floors,
-    pressed,
-    onFloorRequest,
-    ...rest
-}) => {
-    const handleButtonPress = useCallback(
-        (index: number) => () => {
-            if (onFloorRequest) {
-                onFloorRequest(index);
-            }
-        },
-        [onFloorRequest]
-    );
+const ElevatorButtons: React.FC<ElevatorButtonsProps> = ({ floors, pressed, onFloorRequest, ...rest }) => {
+    const handleButtonPress = useCallback((index: number) => () => onFloorRequest(index), [onFloorRequest]);
 
     const buttons = Array.from({ length: floors }, (_, i) => (
         <ElevatorButton
@@ -50,7 +38,7 @@ const ElevatorButtons: React.FC<ElevatorButtonsProps> = ({
     ));
 
 
-    return <StyledElevatorButtons {...rest}>{buttons.reverse()}</StyledElevatorButtons>;
+    return <StyledElevatorButtons data-testid="buttons" {...rest}>{buttons.reverse()}</StyledElevatorButtons>;
 };
 
 export default ElevatorButtons;

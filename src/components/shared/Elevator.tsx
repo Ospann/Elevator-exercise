@@ -1,10 +1,6 @@
 import styled from "styled-components";
 
-interface StyledElevatorProps {
-  position: number;
-}
-
-const StyledElevator = styled.div<StyledElevatorProps>`
+const StyledElevator = styled.div<{ position: number; }>`
   padding: 10px;
   display: flex;
   justify-content: flex-start;
@@ -19,11 +15,7 @@ const StyledElevator = styled.div<StyledElevatorProps>`
   transition: 1s ease-in-out transform;
 `;
 
-interface StyledElevatorCageProps {
-  number: number;
-}
-
-const StyledElevatorCage = styled.div<StyledElevatorCageProps>`
+const StyledElevatorCage = styled.div<{ number: number }>`
   margin-left: ${(props) => props.number * 2.5}rem;
   height: 40px;
   width: 30px;
@@ -31,12 +23,16 @@ const StyledElevatorCage = styled.div<StyledElevatorCageProps>`
   border-radius: 3px;
 `;
 
-interface ElevatorProps extends StyledElevatorProps, StyledElevatorCageProps { }
+interface ElevatorProps {
+  position: number;
+  number: number
+}
 
-export const Elevator: React.FC<ElevatorProps> = (props) => {
+const Elevator: React.FC<ElevatorProps> = ({ position, number }) => {
   return (
-    <StyledElevator position={props.position}>
-      <StyledElevatorCage number={props.number} />
+    <StyledElevator position={position} data-testid="elevator">
+      <StyledElevatorCage number={number} data-testid="elevator-cage" />
     </StyledElevator>
   );
 };
+export default Elevator;

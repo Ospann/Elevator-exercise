@@ -53,9 +53,7 @@ const SubmitButton = styled.button`
 const InputForm: React.FC<InputFormProps> = ({ onSubmit, register }) => {
     const { handleSubmit, formState: { errors } } = useForm<FormData>();
 
-    const handleFormSubmit = (data: FormData) => {
-        onSubmit(data);
-    };
+    const handleFormSubmit = (data: FormData) => onSubmit(data);
 
     return (
         <FormContainer>

@@ -3,7 +3,7 @@ import styled from "styled-components";
 interface ElevatorButtonProps {
   pressed?: boolean;
   children?: React.ReactNode;
-  onClick?: () => void; 
+  onClick?: () => void;
 }
 
 const StyledElevatorButton = styled.button<ElevatorButtonProps>`
@@ -21,8 +21,8 @@ const StyledElevatorButton = styled.button<ElevatorButtonProps>`
   cursor: pointer;
 `;
 
-const ElevatorButton: React.FC<ElevatorButtonProps> = ({ pressed, ...rest }) => {
-  return <StyledElevatorButton aria-pressed={!!pressed} {...rest} />;
-};
+const ElevatorButton: React.FC<ElevatorButtonProps> = ({ pressed, ...rest }) => (
+  <StyledElevatorButton aria-pressed={!!pressed} {...rest} />
+);
 
 export default ElevatorButton;

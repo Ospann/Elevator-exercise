@@ -1,10 +1,11 @@
 import styled from "styled-components";
-import { Elevator } from "./Elevator";
+import Elevator from "./Elevator";
 import BuildingFloor from "../UI/BuildingFloor";
 import findNearestFloorIndex from "../../helpers/findNearestFloorIndex";
 
 const FLOOR_HEIGHT = 60;
 const ELEVATOR_WIDTH = 42.5;
+
 interface IBuilding {
     currentFloors: number[];
     currentFloor: number,
@@ -18,7 +19,6 @@ const StyledBuilding = styled.div<{ elevator: number }>`
     background: gray;
     position: relative;
 `;
-
 
 /**
  * Component which render Building
@@ -40,7 +40,7 @@ const Building = ({ currentFloors, currentFloor, floors, elevators }: IBuilding)
 
 
     return (
-        <StyledBuilding elevator={elevators} >
+        <StyledBuilding data-testid="building" elevator={elevators} >
             {buildingFloors}
             {buildingElevators}
         </StyledBuilding>

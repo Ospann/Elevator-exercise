@@ -2,9 +2,7 @@ import styled from "styled-components";
 
 const StyledElevatorShaft = styled.div``;
 
-interface BuildingFloorProps {
-  height: number;
-}
+interface BuildingFloorProps { height: number }
 
 const StyledBuildingFloor = styled.div<BuildingFloorProps>`
   height: ${(props) => props.height}px;
@@ -21,8 +19,8 @@ const StyledBuildingFloor = styled.div<BuildingFloorProps>`
 
 const BuildingFloor: React.FC<BuildingFloorProps> = ({ height, ...rest }) => {
   return (
-    <StyledBuildingFloor height={height} {...rest}>
-      <StyledElevatorShaft />
+    <StyledBuildingFloor data-testid="building-floor" height={height} {...rest}>
+      <StyledElevatorShaft  data-testid="elevator-shaft"/>
     </StyledBuildingFloor>
   );
 };

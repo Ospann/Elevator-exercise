@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ElevatorButtons from "./components/shared/Buttons";
 import Building from "./components/shared/Building";
 import { Layout } from "./components/UI/Layout";
@@ -26,7 +26,6 @@ const App: React.FC = () => {
 
   const [currentFloor, setCurrentFloor] = useState<number>(0);
   const [elevatorRequests, setElevatorRequests] = useState<boolean[]>([]);
-  const interval = useRef<NodeJS.Timeout | null>(null);
 
   const floors = getValues("floors") || 8;
   const evelators = getValues("lifts") || 1;
@@ -51,30 +50,16 @@ const App: React.FC = () => {
   );
 
   useEffect(() => {
-    if (interval.current) clearInterval(interval.current);
-
-    interval.current = setInterval(moveElevator, 500);
-
-    return () => {
-      if (interval.current) clearInterval(interval.current);
-    };
-  }, [currentFloor, elevatorRequests, moveToFloor, floors]);
-
-
-  const moveElevator = () => {
-    for (let i = currentFloor; i < floors; i += 1) {
-      if (elevatorRequests[i]) {
-        moveToFloor(i);
-        return;
+    const interval = setInterval(() => {
+      for (let i = 0; i < floors; i++) {
+        if (elevatorRequests[i]) {
+          moveToFloor(i);
+          return;
+        }
       }
-    }
-    for (let i = currentFloor; i >= 0; i -= 1) {
-      if (elevatorRequests[i]) {
-        moveToFloor(i);
-        return;
-      }
-    }
-  };
+    }, 500);
+    return () => clearInterval(interval);
+  }, [elevatorRequests, moveToFloor, floors]);
 
   const handleFormSubmit = (data: FormData) => {
     setValue("lifts", data.lifts);
