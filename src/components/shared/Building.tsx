@@ -33,7 +33,7 @@ const Building = memo(({ currentFloors, currentFloor, floors, elevators, busies 
         busies[index] = true;
         return index;
     }, [currentFloor, currentFloors, busies]);
-    setTimeout(() => busies[nearestFloorIndex] = false, 1000);
+    setTimeout(() => busies[nearestFloorIndex] = false, 2000);
     currentFloors[nearestFloorIndex] = currentFloor;
 
     const buildingFloors = Array.from({ length: floors }, (_, index) => (
