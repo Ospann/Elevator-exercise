@@ -1,5 +1,4 @@
-import { render } from "@testing-library/react";
-import { screen } from "@testing-library/dom";
+import { render, screen } from "@testing-library/react";
 import Building from "./Building";
 import "@testing-library/jest-dom/extend-expect";
 
@@ -8,9 +7,11 @@ test("renders correct number of floors and elevators", () => {
     const currentFloor = 1;
     const floors = 5;
     const elevators = 3;
+    const busies = [true, false, false]
 
     render(
         <Building
+            busies={busies}
             currentFloors={currentFloors}
             currentFloor={currentFloor}
             floors={floors}
