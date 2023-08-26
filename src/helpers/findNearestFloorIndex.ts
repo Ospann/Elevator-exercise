@@ -1,18 +1,14 @@
 const findNearestFloorIndex = (
-  value: number,
-  array: number[],
-  busies: boolean[]
+  floor: number,
+  array: {aim: number, index: number,start:number }[],
 ) => {
   let nearestIndex = -1;
   let nearestDifference = Infinity;
 
-  if (array.length < 2) return 0;
-
-  for (let i = array.length - 1; i >= 0; i--) {
-    if (array[i] === value) return i;
-
-    if (!busies[i]) {
-      const difference = Math.abs(array[i] - value);
+  for (let i = array.length -1 ; i >= 0; i--) {
+    if (array[i].start === floor) return array[i].index;
+    if (array[i].start === array[i].aim) {
+      const difference = Math.abs(array[i].start - floor);
 
       if (difference < nearestDifference) {
         nearestIndex = i;
@@ -21,16 +17,7 @@ const findNearestFloorIndex = (
     }
   }
 
-  for (let i = array.length - 1; i > nearestIndex; i--) {
-    if (!busies[i]) {
-      const difference = Math.abs(array[i] - value);
-      if (difference < nearestDifference) {
-        nearestIndex = i;
-        nearestDifference = difference;
-      }
-    }
-  }
-  return nearestIndex;
+  return nearestIndex;                   
 };
 
 export default findNearestFloorIndex;

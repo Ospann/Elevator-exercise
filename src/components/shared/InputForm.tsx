@@ -64,12 +64,12 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, register }) => {
                     type="number"
                     placeholder="1"
                     required
+                    max={10}
                     pattern="[0-9]*"
                     {...register("lifts", {
-                        pattern: {
-                            value: /^[0-9]*$/,
-                            message: "Only numbers are allowed"
-                        }
+                        valueAsNumber: true,
+                        min: 1,
+                        max: 10
                     })}
                 />
                 {errors.lifts && <p>{errors.lifts.message}</p>}
@@ -83,10 +83,9 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, register }) => {
                     required
                     pattern="[0-9]*"
                     {...register("floors", {
-                        pattern: {
-                            value: /^[0-9]*$/,
-                            message: "Only numbers are allowed"
-                        }
+                        valueAsNumber: true,
+                        min: 1,
+                        max: 10
                     })}
                 />
                 {errors.floors && <p>{errors.floors.message}</p>}

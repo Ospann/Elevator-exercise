@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useState, useEffect } from 'react';
-
+import handleSoundPlay from '../../helpers/handleSoundPlay'
 const StyledElevator = styled.div<{ position: number, floor: number }>`
   padding: 10px;
   display: flex;
@@ -34,17 +34,22 @@ interface ElevatorProps {
   number: number;
   distance: number;
   aim: number;
-  updated: boolean;
+  setElevatorInfo: (data:{ aim: number, index: number, start: number }[]) => void;
+  currentFloors: { aim: number, index: number, start: number }[]
 }
 
-const Elevator: React.FC<ElevatorProps> = ({ position, number, distance, aim, updated }) => {
+const Elevator: React.FC<ElevatorProps> = ({ position, number, distance, aim, currentFloors, setElevatorInfo }) => {
   const [currentFloor, setCurrentFloor] = useState(1);
   useEffect(() => {
-    if (!updated || (currentFloor === aim)) return;
+    if ((currentFloor === aim)) return;
 
     const interval = setInterval(() => {
       setCurrentFloor((prevFloor) => {
         if (prevFloor === aim) {
+          const updatedCurrentFloors = [...currentFloors]
+          updatedCurrentFloors[number].start = updatedCurrentFloors[number].aim;
+          setElevatorInfo(updatedCurrentFloors);
+          handleSoundPlay();
           clearInterval(interval);
           return prevFloor;
         }
@@ -63,7 +68,7 @@ const Elevator: React.FC<ElevatorProps> = ({ position, number, distance, aim, up
     return () => {
       clearInterval(interval);
     };
-  }, [aim, updated]);
+  }, [aim]);
 
   return (
     <StyledElevator position={position} floor={distance} data-testid="elevator">

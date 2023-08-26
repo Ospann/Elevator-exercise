@@ -6,11 +6,10 @@ const FLOOR_HEIGHT = 60;
 const ELEVATOR_WIDTH = 42.5;
 
 interface IBuilding {
-    currentFloors: number[];
-    currentFloor: number;
+    currentFloors: { aim: number, index: number; start:number }[];
     floors: number;
     elevators: number;
-    distance: number;
+    setElevatorInfo: (data:{ aim: number, index: number; start: number }[]) => void;
 }
 
 const StyledBuilding = styled.div<{ elevator: number }>`
@@ -21,16 +20,15 @@ const StyledBuilding = styled.div<{ elevator: number }>`
 };
 `
 
-const Building = ({ currentFloors, floors, currentFloor, elevators, distance }: IBuilding) => {
+const Building = ({ currentFloors, floors, elevators,setElevatorInfo }: IBuilding) => {
     const buildingFloors = Array.from({ length: floors }, (_, index) => (
         <BuildingFloor key={index} height={FLOOR_HEIGHT} />
     ));
 
     const buildingElevators = Array.from({ length: elevators }, (_, index) => {
-        const position = currentFloors[index] * FLOOR_HEIGHT;
-        const aim = currentFloor + 1;
-        const updated = currentFloors[index] === currentFloor;
-        return <Elevator key={index} updated={updated} number={index} position={position} distance={distance} aim={aim} />;
+        const position = currentFloors[index].aim * FLOOR_HEIGHT;
+        const distance = Math.abs(currentFloors[index].aim - currentFloors[index].start)
+        return <Elevator currentFloors={currentFloors} key={index} setElevatorInfo={setElevatorInfo}  number={index} position={position} distance={distance} aim={currentFloors[index].aim + 1} />;
     });
 
     return (

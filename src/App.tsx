@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import ElevatorButtons from "./components/shared/Buttons";
 import Building from "./components/shared/Building";
 import { Layout } from "./components/UI/Layout";
@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form";
 import InputForm from "./components/shared/InputForm";
 import { Earth } from "./components/UI/Earth";
 import findNearestFloorIndex from "./helpers/findNearestFloorIndex";
-import handleSoundPlay from "./helpers/handleSoundPlay";
 
 interface FormData {
   lifts: number;
@@ -29,11 +28,14 @@ const App: React.FC = () => {
 
   const [currentFloor, setCurrentFloor] = useState<number>(0);
   const [elevatorRequests, setElevatorRequests] = useState<boolean[]>([]);
-  const [distance, setDistance] = useState(1);
 
   const floors = getValues("floors") || 8;
   const evelators = getValues("lifts") || 1;
-  const [elevatorsFloor, setElevatorsFloor] = useState([0]);
+  const [elevatorsInfo, setElevatorsInfo] = useState([{
+    index: 0,
+    aim: 0,
+    start: 0,
+  }]);
 
   const onFloorRequest = useCallback(
     (floor: number) => {
@@ -69,33 +71,28 @@ const App: React.FC = () => {
   const handleFormSubmit = (data: FormData) => {
     setValue("lifts", data.lifts);
     setValue("floors", data.floors);
-    const currentFloors = Array.from({ length: data.lifts }, () => 0);
-    const busies = Array.from({ length: data.lifts }, () => false);
-    setElevatorsFloor(currentFloors);
-    setValue("busies", busies);
+    const currentFloors = Array.from({ length: data.lifts }, (_, index) => ({
+      aim: 0,
+      index: index,
+      start: 0,
+    }));
+    setElevatorsInfo(currentFloors);
     setCurrentFloor(0);
   };
 
   useEffect(() => {
-    const busies = getValues("busies") || [false];
-    const updatedBusies = [...busies];
-    const updatedCurrentFloors = [...elevatorsFloor];
-    const isAllTrue = busies.every((value) => value === true);
-    if (isAllTrue) return;
+    const updatedCurrentFloors = [...elevatorsInfo];
+    const allLiftsBusy = elevatorsInfo.every(lift => lift.aim !== lift.start);
+    if (allLiftsBusy) return;
 
-    const index = findNearestFloorIndex(currentFloor, elevatorsFloor, busies);
-    const distance = Math.abs(elevatorsFloor[index] - currentFloor);
-    setDistance(distance);
-    updatedBusies[index] = true;
-    updatedCurrentFloors[index] = currentFloor;
+    const index = findNearestFloorIndex(currentFloor, elevatorsInfo);
+    console.log(`index: ${index}`)
+    const elevator = elevatorsInfo[index];
+    const distance = Math.abs(elevator?.aim - elevator?.start);
+    console.log(distance)
+    updatedCurrentFloors[index].aim = currentFloor;
 
-    setValue("busies", updatedBusies);
-    setElevatorsFloor(updatedCurrentFloors)
-    setTimeout(() => {
-      updatedBusies[index] = false;
-      setValue("busies", updatedBusies);
-      handleSoundPlay();
-    }, distance * 1000);
+    setElevatorsInfo(updatedCurrentFloors);
   }, [currentFloor, getValues, setValue])
 
   return (
@@ -110,9 +107,8 @@ const App: React.FC = () => {
         <Building
           floors={floors}
           elevators={evelators}
-          currentFloors={elevatorsFloor}
-          currentFloor={currentFloor}
-          distance={distance}
+          setElevatorInfo={setElevatorsInfo}
+          currentFloors={elevatorsInfo}
         />
       </Layout>
       <Earth />
