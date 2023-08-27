@@ -6,10 +6,10 @@ const FLOOR_HEIGHT = 60;
 const ELEVATOR_WIDTH = 42.5;
 
 interface IBuilding {
-    currentFloors: { aim: number, index: number; start:number }[];
+    currentFloors: { aim: number, index: number; start: number }[];
     floors: number;
     elevators: number;
-    setElevatorInfo: (data:{ aim: number, index: number; start: number }[]) => void;
+    setElevatorInfo: (data: { aim: number, index: number; start: number }[]) => void;
 }
 
 const StyledBuilding = styled.div<{ elevator: number }>`
@@ -20,21 +20,36 @@ const StyledBuilding = styled.div<{ elevator: number }>`
 };
 `
 
-const Building = ({ currentFloors, floors, elevators,setElevatorInfo }: IBuilding) => {
-    const buildingFloors = Array.from({ length: floors }, (_, index) => (
-        <BuildingFloor key={index} height={FLOOR_HEIGHT} />
-    ));
+const Building = ({ currentFloors, floors, elevators, setElevatorInfo }: IBuilding) => {
+    const renderBuildingFloors = () =>{
+        return Array.from({ length: floors }, (_, index) => (
+            <BuildingFloor key={index} height={FLOOR_HEIGHT} />
+        ));
+    }
 
-    const buildingElevators = Array.from({ length: elevators }, (_, index) => {
-        const position = currentFloors[index].aim * FLOOR_HEIGHT;
-        const distance = Math.abs(currentFloors[index].aim - currentFloors[index].start)
-        return <Elevator currentFloors={currentFloors} key={index} setElevatorInfo={setElevatorInfo}  number={index} position={position} distance={distance} aim={currentFloors[index].aim + 1} />;
-    });
+    const renderBuildingElevators = () => {
+        return currentFloors.map((floor, index) => {
+          const position = floor.aim * FLOOR_HEIGHT;
+          const distance = Math.abs(floor.aim - floor.start);
+    
+          return (
+            <Elevator
+              currentFloors={currentFloors}
+              key={index}
+              setElevatorInfo={setElevatorInfo}
+              number={index}
+              position={position}
+              distance={distance}
+              aim={floor.aim + 1}
+            />
+          );
+        });
+      };
 
     return (
         <StyledBuilding data-testid="building" elevator={elevators} >
-            {buildingFloors}
-            {buildingElevators}
+            {renderBuildingFloors()}
+            {renderBuildingElevators()}
         </StyledBuilding>
     );
 };

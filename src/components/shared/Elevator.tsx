@@ -15,7 +15,6 @@ const StyledElevator = styled.div<{ position: number, floor: number }>`
   transition: ${(props) => props.floor}s ease-in-out transform;
   transform: translateY(-${(props) => props.position}px);
   `;
-// transition: 1s ease-in-out transform;
 
 const StyledElevatorCage = styled.div<{ number: number }>`
   margin-left: ${(props) => props.number * 2.5}rem;
@@ -40,35 +39,38 @@ interface ElevatorProps {
 
 const Elevator: React.FC<ElevatorProps> = ({ position, number, distance, aim, currentFloors, setElevatorInfo }) => {
   const [currentFloor, setCurrentFloor] = useState(1);
+
   useEffect(() => {
-    if ((currentFloor === aim)) return;
+    let isMounted = true;
+    let targetFloor = currentFloor;
 
     const interval = setInterval(() => {
-      setCurrentFloor((prevFloor) => {
-        if (prevFloor === aim) {
-          const updatedCurrentFloors = [...currentFloors]
+      if ((currentFloor === aim)) return;
+
+      if (targetFloor === aim) {
+        clearInterval(interval);
+      } else if (targetFloor > aim) {
+        targetFloor -= 1;
+      } else if (targetFloor < aim) {
+        targetFloor += 1;
+      }
+
+      if (isMounted && targetFloor !== currentFloor) {
+        setCurrentFloor(targetFloor);
+        if (targetFloor === aim) {
+          const updatedCurrentFloors = [...currentFloors];
           updatedCurrentFloors[number].start = updatedCurrentFloors[number].aim;
           setElevatorInfo(updatedCurrentFloors);
           handleSoundPlay();
-          clearInterval(interval);
-          return prevFloor;
         }
-
-        if (prevFloor > aim) {
-          return prevFloor - 1;
-        } else if (prevFloor < aim) {
-          return prevFloor + 1;
-        } else {
-          clearInterval(interval);
-          return prevFloor;
-        }
-      });
+      }
     }, 1000);
 
     return () => {
+      isMounted = false;
       clearInterval(interval);
     };
-  }, [aim]);
+  }, [aim, currentFloor, currentFloors, number, setElevatorInfo]);
 
   return (
     <StyledElevator position={position} floor={distance} data-testid="elevator">
@@ -78,5 +80,6 @@ const Elevator: React.FC<ElevatorProps> = ({ position, number, distance, aim, cu
     </StyledElevator>
   );
 };
+
 
 export default Elevator;

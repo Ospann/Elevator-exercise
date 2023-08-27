@@ -23,7 +23,7 @@ describe('Elevator component', () => {
     );
 
     const elevatorCage = screen.getByTestId('elevator-cage');
-    expect(elevatorCage).toHaveTextContent('1');
+    expect(elevatorCage.textContent).toBe('1');
   });
 
   it('should update the floor when the aim floor changes', () => {
@@ -39,10 +39,10 @@ describe('Elevator component', () => {
     );
 
     const elevatorCage = screen.getByTestId('elevator-cage');
-    expect(elevatorCage).toHaveTextContent('1');
+    expect(elevatorCage.textContent).toBe('1');
 
     userEvent.click(screen.getByText('7'));
-    expect(elevatorCage).toHaveTextContent('2');
+    expect(elevatorCage.textContent).toBe('2');
   });
 
   it('should stop updating the floor when the aim floor is reached', () => {
@@ -58,9 +58,9 @@ describe('Elevator component', () => {
     );
 
     const elevatorCage = screen.getByTestId('elevator-cage');
-    expect(elevatorCage).toHaveTextContent('1');
+    expect(elevatorCage.textContent).toBe('1');
 
     jest.advanceTimersByTime(3000); // Advance time by 3 seconds
-    expect(elevatorCage).toHaveTextContent('3');
+    expect(elevatorCage.textContent).toBe('3');
   });
 });

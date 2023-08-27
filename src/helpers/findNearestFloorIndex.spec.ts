@@ -17,14 +17,14 @@ describe('findNearestFloorIndex function', () => {
   it('should return the correct index when there are non-busy elevators', () => {
     const array = [
       { aim: 5, index: 0, start: 3 },
-      { aim: 7, index: 1, start: 3 },
+      { aim: 7, index: 1, start: 7 },
       { aim: 3, index: 2, start: 7 },
     ];
     const floor = 6;
 
     const result = findNearestFloorIndex(floor, array);
 
-    expect(result).toBe(2);
+    expect(result).toBe(1);
   });
 
   it('should return -1 when all elevators are busy', () => {

@@ -15,6 +15,12 @@ interface FormData {
   oldFloors?: number[];
 }
 
+interface IElevatorInfo {
+  index: number,
+  aim: number,
+  start: number,
+}
+
 const App: React.FC = () => {
   const {
     register,
@@ -31,7 +37,7 @@ const App: React.FC = () => {
 
   const floors = getValues("floors") || 8;
   const evelators = getValues("lifts") || 1;
-  const [elevatorsInfo, setElevatorsInfo] = useState([{
+  const [elevatorsInfo, setElevatorsInfo] = useState<IElevatorInfo[]>([{
     index: 0,
     aim: 0,
     start: 0,
@@ -86,14 +92,12 @@ const App: React.FC = () => {
     if (allLiftsBusy) return;
 
     const index = findNearestFloorIndex(currentFloor, elevatorsInfo);
-    console.log(`index: ${index}`)
-    const elevator = elevatorsInfo[index];
-    const distance = Math.abs(elevator?.aim - elevator?.start);
-    console.log(distance)
     updatedCurrentFloors[index].aim = currentFloor;
 
     setElevatorsInfo(updatedCurrentFloors);
   }, [currentFloor, getValues, setValue])
+
+  const handleChangeInfo = (info: IElevatorInfo[]) =>setElevatorsInfo(info);
 
   return (
     <>
@@ -107,13 +111,13 @@ const App: React.FC = () => {
         <Building
           floors={floors}
           elevators={evelators}
-          setElevatorInfo={setElevatorsInfo}
+          setElevatorInfo={handleChangeInfo}
           currentFloors={elevatorsInfo}
         />
       </Layout>
       <Earth />
     </>
   );
-};
+  };
 
-export default App;
+  export default App;
