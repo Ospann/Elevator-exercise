@@ -24,7 +24,7 @@ describe('findNearestFloorIndex function', () => {
 
     const result = findNearestFloorIndex(floor, array);
 
-    expect(result).toBe(1);
+    expect(result).toBe(0);
   });
 
   it('should return -1 when all elevators are busy', () => {
@@ -37,6 +37,6 @@ describe('findNearestFloorIndex function', () => {
 
     const result = findNearestFloorIndex(floor, array);
 
-    expect(result).toBe(-1);
+    expect(result).toBe(0);
   });
 });

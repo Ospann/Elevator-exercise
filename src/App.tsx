@@ -94,7 +94,9 @@ const App: React.FC = () => {
     if (updatedCurrentFloors[index].aim?.includes(currentFloor)) {
       updatedCurrentFloors[index].aim = updatedCurrentFloors[index].aim.filter(floor => floor !== currentFloor);
     } else {
-      updatedCurrentFloors[index].aim.push(currentFloor);
+      if (updatedCurrentFloors[index].start !== currentFloor) {
+        updatedCurrentFloors[index].aim.push(currentFloor);
+      }
     }
     console.log(updatedCurrentFloors[index].aim)
     setElevatorsInfo(updatedCurrentFloors);
