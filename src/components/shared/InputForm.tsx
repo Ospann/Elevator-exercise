@@ -48,6 +48,10 @@ const SubmitButton = styled.button`
     cursor: pointer;
 `;
 
+const ErrorAlert = styled.p`
+    color:red;
+`
+
 const InputForm: React.FC<InputFormProps> = ({ onSubmit }) => {
     const { handleSubmit, register, formState: { errors } } = useFormContext<FormData>();
 
@@ -65,10 +69,14 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit }) => {
                     {...register("lifts", {
                         valueAsNumber: true,
                         min: 1,
-                        max: 10,
+                        max: {
+                            value: 10,
+                            message: "Lifts cannot be greater than 10"
+                        },
                         required: true
                     })}
                 />
+                {errors.lifts && <ErrorAlert>{errors.lifts.message}</ErrorAlert>}
             </FormGroup>
             <FormGroup>
                 <Label htmlFor="floors">Floors:</Label>

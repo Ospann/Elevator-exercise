@@ -22,23 +22,14 @@ interface IElevatorInfo {
 }
 
 const App: React.FC = () => {
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   setValue,
-  //   getValues,
-  //   // @ts-ignore
-  //   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  //   formState: { errors },
-  // } = useForm<FormData>();
   const methods = useForm<FormData>();
   const { setValue, getValues } = methods;
 
   const [currentFloor, setCurrentFloor] = useState<number>(0);
   const [elevatorRequests, setElevatorRequests] = useState<boolean[]>([]);
 
-  const floors = getValues("floors") || 8;
-  const evelators = getValues("lifts") || 1;
+  const [floors, setFloors] = useState(8);
+  const [elevators, setElevators] = useState(1);
   const [elevatorsInfo, setElevatorsInfo] = useState<IElevatorInfo[]>([{
     index: 0,
     aim: [],
@@ -78,8 +69,8 @@ const App: React.FC = () => {
 
   const handleFormSubmit = (data: FormData) => {
     const lifts = Math.min(data.lifts, 10);
-    setValue("lifts", lifts);
-    setValue("floors", data.floors);
+    setFloors(data.floors || 8);
+    setElevators(lifts)
     setCurrentFloor(0);
     const currentFloors = Array.from({ length: lifts }, (_, index) => ({
       aim: [],
@@ -119,7 +110,7 @@ const App: React.FC = () => {
         />
         <Building
           floors={floors}
-          elevators={evelators}
+          elevators={elevators}
           setElevatorInfo={handleChangeInfo}
           currentFloors={elevatorsInfo}
         />
