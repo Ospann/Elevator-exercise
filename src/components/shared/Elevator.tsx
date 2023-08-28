@@ -39,7 +39,7 @@ interface ElevatorProps {
 
 const Elevator: React.FC<ElevatorProps> = ({ position, number, distance, aim, currentFloors, setElevatorInfo }) => {
   const [currentFloor, setCurrentFloor] = useState(1);
-  console.log(position)
+
   useEffect(() => {
     let isMounted = true;
     let targetFloor = currentFloor;

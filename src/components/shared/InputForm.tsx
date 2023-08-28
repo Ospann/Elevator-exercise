@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import styled from "styled-components";
-import { useForm, UseFormReturn } from "react-hook-form";
-
+import { useFormContext } from "react-hook-form";
 interface FormData {
     lifts: number;
     floors: number;
@@ -10,7 +9,6 @@ interface FormData {
 
 interface InputFormProps {
     onSubmit: any;
-    register: UseFormReturn<FormData>["register"];
 }
 
 const FormContainer = styled.div`
@@ -50,8 +48,8 @@ const SubmitButton = styled.button`
     cursor: pointer;
 `;
 
-const InputForm: React.FC<InputFormProps> = ({ onSubmit, register }) => {
-    const { handleSubmit, formState: { errors } } = useForm<FormData>();
+const InputForm: React.FC<InputFormProps> = ({ onSubmit }) => {
+    const { handleSubmit, register, formState: { errors } } = useFormContext<FormData>();
 
     const handleFormSubmit = (data: FormData) => onSubmit(data);
 
@@ -64,15 +62,13 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, register }) => {
                     type="number"
                     placeholder="1"
                     required
-                    max={10}
-                    pattern="[0-9]*"
                     {...register("lifts", {
                         valueAsNumber: true,
                         min: 1,
-                        max: 10
+                        max: 10,
+                        required: true
                     })}
                 />
-                {errors.lifts && <p>{errors.lifts.message}</p>}
             </FormGroup>
             <FormGroup>
                 <Label htmlFor="floors">Floors:</Label>
@@ -81,12 +77,7 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, register }) => {
                     type="number"
                     placeholder="8"
                     required
-                    pattern="[0-9]*"
-                    {...register("floors", {
-                        valueAsNumber: true,
-                        min: 1,
-                        max: 10
-                    })}
+                    {...register("floors", { valueAsNumber: true })}
                 />
                 {errors.floors && <p>{errors.floors.message}</p>}
             </FormGroup>

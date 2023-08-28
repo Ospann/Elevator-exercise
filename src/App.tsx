@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import ElevatorButtons from "./components/shared/Buttons";
 import Building from "./components/shared/Building";
 import { Layout } from "./components/UI/Layout";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import InputForm from "./components/shared/InputForm";
 import { Earth } from "./components/UI/Earth";
 import findNearestFloorIndex from "./helpers/findNearestFloorIndex";
@@ -22,15 +22,17 @@ interface IElevatorInfo {
 }
 
 const App: React.FC = () => {
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    getValues,
-    // @ts-ignore
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    formState: { errors },
-  } = useForm<FormData>();
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   setValue,
+  //   getValues,
+  //   // @ts-ignore
+  //   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  //   formState: { errors },
+  // } = useForm<FormData>();
+  const methods = useForm<FormData>();
+  const { setValue, getValues } = methods;
 
   const [currentFloor, setCurrentFloor] = useState<number>(0);
   const [elevatorRequests, setElevatorRequests] = useState<boolean[]>([]);
@@ -75,10 +77,11 @@ const App: React.FC = () => {
   }, [elevatorRequests, moveToFloor, floors]);
 
   const handleFormSubmit = (data: FormData) => {
-    setValue("lifts", data.lifts);
+    const lifts = Math.min(data.lifts, 10);
+    setValue("lifts", lifts);
     setValue("floors", data.floors);
     setCurrentFloor(0);
-    const currentFloors = Array.from({ length: data.lifts }, (_, index) => ({
+    const currentFloors = Array.from({ length: lifts }, (_, index) => ({
       aim: [],
       index,
       start: 0,
@@ -86,10 +89,10 @@ const App: React.FC = () => {
     setElevatorsInfo(currentFloors);
   };
 
+
   useEffect(() => {
     const updatedCurrentFloors = [...elevatorsInfo];
     const index = findNearestFloorIndex(currentFloor, elevatorsInfo);
-    console.log(index)
 
     if (updatedCurrentFloors[index].aim?.includes(currentFloor)) {
       updatedCurrentFloors[index].aim = updatedCurrentFloors[index].aim.filter(floor => floor !== currentFloor);
@@ -98,7 +101,6 @@ const App: React.FC = () => {
         updatedCurrentFloors[index].aim.push(currentFloor);
       }
     }
-    console.log(updatedCurrentFloors[index].aim)
     setElevatorsInfo(updatedCurrentFloors);
   }, [currentFloor, getValues, setValue])
 
@@ -107,7 +109,9 @@ const App: React.FC = () => {
   return (
     <>
       <Layout className="App">
-        <InputForm register={register} onSubmit={handleSubmit(handleFormSubmit)} />
+        <FormProvider {...methods}>
+          <InputForm onSubmit={handleFormSubmit} />
+        </FormProvider>
         <ElevatorButtons
           floors={floors}
           onFloorRequest={onFloorRequest}
