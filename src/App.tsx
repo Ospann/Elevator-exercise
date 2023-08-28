@@ -17,7 +17,7 @@ interface FormData {
 
 interface IElevatorInfo {
   index: number,
-  aim: number,
+  aim: number[],
   start: number,
 }
 
@@ -39,7 +39,7 @@ const App: React.FC = () => {
   const evelators = getValues("lifts") || 1;
   const [elevatorsInfo, setElevatorsInfo] = useState<IElevatorInfo[]>([{
     index: 0,
-    aim: 0,
+    aim: [],
     start: 0,
   }]);
 
@@ -77,27 +77,30 @@ const App: React.FC = () => {
   const handleFormSubmit = (data: FormData) => {
     setValue("lifts", data.lifts);
     setValue("floors", data.floors);
+    setCurrentFloor(0);
     const currentFloors = Array.from({ length: data.lifts }, (_, index) => ({
-      aim: 0,
-      index: index,
+      aim: [],
+      index,
       start: 0,
     }));
     setElevatorsInfo(currentFloors);
-    setCurrentFloor(0);
   };
 
   useEffect(() => {
     const updatedCurrentFloors = [...elevatorsInfo];
-    const allLiftsBusy = elevatorsInfo.every(lift => lift.aim !== lift.start);
-    if (allLiftsBusy) return;
-
     const index = findNearestFloorIndex(currentFloor, elevatorsInfo);
-    updatedCurrentFloors[index].aim = currentFloor;
+    console.log(index)
 
+    if (updatedCurrentFloors[index].aim?.includes(currentFloor)) {
+      updatedCurrentFloors[index].aim = updatedCurrentFloors[index].aim.filter(floor => floor !== currentFloor);
+    } else {
+      updatedCurrentFloors[index].aim.push(currentFloor);
+    }
+    console.log(updatedCurrentFloors[index].aim)
     setElevatorsInfo(updatedCurrentFloors);
   }, [currentFloor, getValues, setValue])
 
-  const handleChangeInfo = (info: IElevatorInfo[]) =>setElevatorsInfo(info);
+  const handleChangeInfo = (info: IElevatorInfo[]) => setElevatorsInfo(info);
 
   return (
     <>
@@ -118,6 +121,6 @@ const App: React.FC = () => {
       <Earth />
     </>
   );
-  };
+};
 
-  export default App;
+export default App;

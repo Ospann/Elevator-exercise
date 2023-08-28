@@ -6,10 +6,10 @@ const FLOOR_HEIGHT = 60;
 const ELEVATOR_WIDTH = 42.5;
 
 interface IBuilding {
-    currentFloors: { aim: number, index: number; start: number }[];
-    floors: number;
-    elevators: number;
-    setElevatorInfo: (data: { aim: number, index: number; start: number }[]) => void;
+  currentFloors: { aim: number[], index: number; start: number }[];
+  floors: number;
+  elevators: number;
+  setElevatorInfo: (data: { aim: number[], index: number; start: number }[]) => void;
 }
 
 const StyledBuilding = styled.div<{ elevator: number }>`
@@ -21,37 +21,38 @@ const StyledBuilding = styled.div<{ elevator: number }>`
 `
 
 const Building = ({ currentFloors, floors, elevators, setElevatorInfo }: IBuilding) => {
-    const renderBuildingFloors = () =>{
-        return Array.from({ length: floors }, (_, index) => (
-            <BuildingFloor key={index} height={FLOOR_HEIGHT} />
-        ));
-    }
+  const renderBuildingFloors = () => {
+    return Array.from({ length: floors }, (_, index) => (
+      <BuildingFloor key={index} height={FLOOR_HEIGHT} />
+    ));
+  }
 
-    const renderBuildingElevators = () => {
-        return currentFloors.map((floor, index) => {
-          const position = floor.aim * FLOOR_HEIGHT;
-          const distance = Math.abs(floor.aim - floor.start);
-    
-          return (
-            <Elevator
-              currentFloors={currentFloors}
-              key={index}
-              setElevatorInfo={setElevatorInfo}
-              number={index}
-              position={position}
-              distance={distance}
-              aim={floor.aim + 1}
-            />
-          );
-        });
-      };
+  const renderBuildingElevators = () => {
+    return currentFloors.map((floor, index) => {
+      const positionAim = floor.aim.length > 0 ? floor.aim?.[0] : floor.start;
+      const position = positionAim * FLOOR_HEIGHT;
+      const distance = Math.abs(floor.aim?.[0] - floor.start) || 0;
 
-    return (
-        <StyledBuilding data-testid="building" elevator={elevators} >
-            {renderBuildingFloors()}
-            {renderBuildingElevators()}
-        </StyledBuilding>
-    );
+      return (
+        <Elevator
+          currentFloors={currentFloors}
+          key={index}
+          setElevatorInfo={setElevatorInfo}
+          number={index}
+          position={position}
+          distance={distance}
+          aim={floor.aim[0] + 1}
+        />
+      );
+    });
+  };
+
+  return (
+    <StyledBuilding data-testid="building" elevator={elevators} >
+      {renderBuildingFloors()}
+      {renderBuildingElevators()}
+    </StyledBuilding>
+  );
 };
 
 export default Building;

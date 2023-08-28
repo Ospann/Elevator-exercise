@@ -33,13 +33,13 @@ interface ElevatorProps {
   number: number;
   distance: number;
   aim: number;
-  setElevatorInfo: (data:{ aim: number, index: number, start: number }[]) => void;
-  currentFloors: { aim: number, index: number, start: number }[]
+  setElevatorInfo: (data: { aim: number[], index: number, start: number }[]) => void;
+  currentFloors: { aim: number[], index: number, start: number }[]
 }
 
 const Elevator: React.FC<ElevatorProps> = ({ position, number, distance, aim, currentFloors, setElevatorInfo }) => {
   const [currentFloor, setCurrentFloor] = useState(1);
-
+  console.log(position)
   useEffect(() => {
     let isMounted = true;
     let targetFloor = currentFloor;
@@ -59,7 +59,8 @@ const Elevator: React.FC<ElevatorProps> = ({ position, number, distance, aim, cu
         setCurrentFloor(targetFloor);
         if (targetFloor === aim) {
           const updatedCurrentFloors = [...currentFloors];
-          updatedCurrentFloors[number].start = updatedCurrentFloors[number].aim;
+          updatedCurrentFloors[number].start = updatedCurrentFloors[number].aim[0];
+          updatedCurrentFloors[number].aim.shift()
           setElevatorInfo(updatedCurrentFloors);
           handleSoundPlay();
         }
@@ -75,7 +76,7 @@ const Elevator: React.FC<ElevatorProps> = ({ position, number, distance, aim, cu
   return (
     <StyledElevator position={position} floor={distance} data-testid="elevator">
       <StyledElevatorCage number={number} data-testid="elevator-cage">
-        {distance > 0 ? `${currentFloor}` : currentFloor}
+        {distance > 0 ? currentFloor : currentFloors[number].start + 1}
       </StyledElevatorCage>
     </StyledElevator>
   );
